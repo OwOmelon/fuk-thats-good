@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import Nav from "@/components/Nav.vue";
 import Search from "@/components/Search.vue";
-import debug from "@/components/_debug.vue";
 
 import Playlist from "@/components/playlist/List.vue";
 </script>
@@ -11,8 +10,6 @@ import Playlist from "@/components/playlist/List.vue";
 	<Search />
 
 	<Playlist />
-
-	<!-- <debug /> -->
 </template>
 
 <style lang="postcss">
