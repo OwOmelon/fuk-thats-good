@@ -98,13 +98,7 @@ function saveVideoTags() {
 	}, 0);
 }
 
-function shitPostToSilly() {
-	Object.entries(videoTags.value).forEach(([id, tags]) => {
-		videoTags.value[id] = tags.map((tag) =>
-			tag === "shitpost" ? "silly" : tag,
-		);
-	});
-}
+function shitPostToSilly() {}
 
 function test() {
 	console.log(
