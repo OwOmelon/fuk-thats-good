@@ -1,12 +1,13 @@
 import { ref } from "vue";
 import { defineStore } from "pinia";
+import { getYear } from "date-fns";
 import { years } from "@/utils/get_years";
 
-import type { Year, PlaylistItem_Tag, PlaylistItem } from "@/types";
+import type { Year, PlaylistItem_Tag } from "@/types";
 
 export const useFiltersStore = defineStore("filters", () => {
 	const sortDescending = ref(true);
-	const activeYear = ref<Year>("2024");
+	const activeYear = ref(`${getYear(new Date())}` as Year);
 	const activeTagFilters = ref(new Map<PlaylistItem_Tag, 1>());
 
 	function setActiveYear(dir: 1 | -1) {
@@ -31,7 +32,7 @@ export const useFiltersStore = defineStore("filters", () => {
 
 	// ==========
 
-	const searchInput = ref("")
+	const searchInput = ref("");
 
 	// ==========
 
