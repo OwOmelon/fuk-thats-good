@@ -74,7 +74,7 @@ function formatDate(date: Date) {
 						:href="`https://www.youtube.com/channel/${snippet.videoOwnerChannelId}`"
 						target="_blank"
 						:title="snippet.videoOwnerChannelTitle"
-						class="w-fit"
+						class="w-fit line-clamp-1"
 					>
 						{{ snippet.videoOwnerChannelTitle }}
 					</a>
