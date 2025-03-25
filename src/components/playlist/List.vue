@@ -29,9 +29,9 @@ const currentPlaylist = computed(() => {
 const playlistItems_Sorted = computed(() => {
 	if (!currentPlaylist.value?.data) return [];
 
-	const compareFn = sortDescending.value ? desc : asc;
-
-	return currentPlaylist.value.data.items.toSorted(compareFn);
+	return currentPlaylist.value.data.items.toSorted(
+		sortDescending.value ? desc : asc,
+	);
 
 	function getPublishTime(a: PlaylistItem, b: PlaylistItem) {
 		return {
@@ -86,19 +86,17 @@ const playlistItems_Sorted_FilteredByTagsAndSearchResults = computed(() => {
 	};
 
 	return playlistItems_Sorted_FilteredByTags.value.filter((item) => {
-		const { title, videoOwnerChannelTitle: channel } = item.snippet;
+		let { title, videoOwnerChannelTitle: channel } = item.snippet;
 
-		const titleWords = splitString_ToLowerCase(title);
-		const channelWords = splitString_ToLowerCase(channel);
+		if (!item.contentDetails.videoPublishedAt) return false;
 
-		for (const word of searchInput.value.split(" ")) {
-			const lowercaseWord = word.toLowerCase();
+		for (const searchWord of splitString_ToLowerCase(searchInput.value)) {
+			const lowercaseSearchWord = searchWord.toLowerCase();
 
-			if (
-				titleWords.indexOf(lowercaseWord) !== -1 ||
-				channelWords.indexOf(lowercaseWord) !== -1
-			) {
-				return true;
+			switch (true) {
+				case title.toLowerCase().includes(lowercaseSearchWord):
+				case channel.toLowerCase().includes(lowercaseSearchWord):
+					return true;
 			}
 		}
 
@@ -134,49 +132,51 @@ onMounted(() => {
 <template>
 	<div class="grid-content">
 		<div
-		class="grid-content-outter relative grid grid-cols-1 grid-rows-[2rem,_auto_2rem] gap-3"
-	>
-		<div
-			class="relative col-start-1 col-end-2 row-start-1 grid place-items-center"
+			class="grid-content-outter relative grid grid-cols-1 grid-rows-[2rem,_auto_2rem] gap-3"
 		>
-			<div class="absolute bottom-0 left-0">
-				{{ playlistItems_Sorted_FilteredByTagsAndSearchResults.length }}/{{
-					currentPlaylist.data?.pageInfo?.totalResults
-				}}
+			<div
+				class="relative col-start-1 col-end-2 row-start-1 grid place-items-center"
+			>
+				<div class="absolute bottom-0 left-0">
+					{{ playlistItems_Sorted_FilteredByTagsAndSearchResults.length }}/{{
+						currentPlaylist.data?.pageInfo?.totalResults
+					}}
+				</div>
+
+				<button
+					:disabled="currentPlaylist.fetching"
+					:class="[
+						{ hidden: sortDescending || wholePlaylistFetched },
+						'self-stretch rounded bg-white px-3 shadow disabled:opacity-50',
+					]"
+					@click="fetchPlaylist(activeYear)"
+				>
+					load more videos
+				</button>
 			</div>
 
-			<button
-				:disabled="currentPlaylist.fetching"
-				:class="[
-					{ hidden: sortDescending || wholePlaylistFetched },
-					'self-stretch rounded bg-white px-3 shadow disabled:opacity-50',
-				]"
-				@click="fetchPlaylist(activeYear)"
-			>
-				load more videos
-			</button>
+			<div class="row-start-2 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+				<PlaylistItem_Component
+					v-for="(
+						item, _
+					) in playlistItems_Sorted_FilteredByTagsAndSearchResults"
+					:key="item.contentDetails.videoId"
+					v-bind="item"
+					@click="setActiveVideo(item)"
+				/>
+			</div>
+
+			<div ref="bottom" />
+
+			<Transition name="fade">
+				<div
+					v-show="currentPlaylist.fetching"
+					:class="[
+						sortDescending ? 'row-start-3' : 'row-start-1',
+						'loading pointer-events-none -z-10 col-start-1 rounded bg-stone-300',
+					]"
+				/>
+			</Transition>
 		</div>
-
-		<div class="row-start-2 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-			<PlaylistItem_Component
-				v-for="(item, _) in playlistItems_Sorted_FilteredByTagsAndSearchResults"
-				:key="item.contentDetails.videoId"
-				v-bind="item"
-				@click="setActiveVideo(item)"
-			/>
-		</div> 
-
-		<div ref="bottom" />
-
-		<Transition name="fade">
-			<div
-				v-show="currentPlaylist.fetching"
-				:class="[
-					sortDescending ? 'row-start-3' : 'row-start-1',
-					'loading pointer-events-none -z-10 col-start-1 rounded bg-stone-300',
-				]"
-			/>
-		</Transition>
-	</div>
 	</div>
 </template>
