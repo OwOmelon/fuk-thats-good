@@ -19,8 +19,21 @@ const tags = computed(() => {
 	return getVideoTags(snippet.resourceId.videoId);
 });
 
+const thumbnailUrl = computed(() => {
+	const { thumbnails } = snippet;
+
+	return (
+		thumbnails?.maxres?.url ||
+		thumbnails?.standard?.url ||
+		thumbnails?.high?.url ||
+		thumbnails?.medium?.url ||
+		thumbnails?.default?.url ||
+		""
+	);
+});
+
 function formatDate(date: Date) {
-	return `${formatDistance(new Date(), new Date(date))} ago`;
+	return date ? `${formatDistance(new Date(), new Date(date))} ago` : "---";
 }
 </script>
 
@@ -38,7 +51,7 @@ function formatDate(date: Date) {
 			>
 				<div
 					:style="{
-						backgroundImage: `url(${snippet.thumbnails.high.url})`,
+						backgroundImage: `url(${thumbnailUrl})`,
 						backgroundSize: '180%',
 					}"
 					class="h-full w-full bg-center bg-no-repeat shadow-[inset_0_0_0.25rem_rgba(0,_0,_0,_0.125)] transition-opacity group-hover:opacity-75"
