@@ -3,13 +3,13 @@ import IconSearch from "~icons/mdi/magnify";
 import IconChevronLeft from "~icons/mdi/chevron-left";
 import IconChevronRight from "~icons/mdi/chevron-right";
 
-import { tags } from "@/utils/get_tags";
+import { tags } from "../utils/get_tags";
 
-import TagIcon from "@/components/TagIcon.vue";
+import TagIcon from "../components/TagIcon.vue";
 
 import { useTemplateRef } from "vue";
 import { storeToRefs } from "pinia";
-import { useFiltersStore } from "@/stores/filters";
+import { useFiltersStore } from "../stores/filters";
 
 const { sortDescending, activeYear, activeTagFilters, searchInput } =
 	storeToRefs(useFiltersStore());

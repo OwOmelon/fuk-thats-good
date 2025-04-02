@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import IconPlay from "~icons/material-symbols/play-arrow-rounded";
-import TagIcon from "@/components/TagIcon.vue";
+import TagIcon from "../components/TagIcon.vue";
 
 import { computed } from "vue";
 import { formatDistance } from "date-fns";
-import { useVideoTagsStore } from "@/stores/video_tags";
+import { useVideoTagsStore } from "../stores/video_tags";
 
-import type { PlaylistItem } from "@/types";
+import type { PlaylistItem } from "../types";
 
 const { snippet, contentDetails } = defineProps<{
 	snippet: PlaylistItem["snippet"];
@@ -74,7 +74,7 @@ function formatDate(date: Date) {
 						:href="`https://www.youtube.com/channel/${snippet.videoOwnerChannelId}`"
 						target="_blank"
 						:title="snippet.videoOwnerChannelTitle"
-						class="w-fit line-clamp-1"
+						class="line-clamp-1 w-fit"
 					>
 						{{ snippet.videoOwnerChannelTitle }}
 					</a>

@@ -1,14 +1,12 @@
 <script setup lang="ts">
-import Nav from "@/components/Nav.vue";
-import Search from "@/components/Search.vue";
-
-import Playlist from "@/components/playlist/List.vue";
+import Nav from "@/app/components/Nav.vue";
+import Search from "@/playlist/components/Search.vue";
+import Playlist from "@/playlist/components/List.vue";
 </script>
 
 <template>
 	<Nav />
 	<Search />
-
 	<Playlist />
 </template>
 
@@ -36,7 +34,7 @@ body {
 }
 
 #app > * {
-	@apply max-w-screen-xl mx-auto w-full;
+	@apply mx-auto w-full max-w-screen-xl;
 }
 
 .grid-content {

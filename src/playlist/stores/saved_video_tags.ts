@@ -1,4 +1,4 @@
-import type { PlaylistItem, PlaylistItem_Tag } from "@/types";
+import type { PlaylistItem, PlaylistItem_Tag } from "../types";
 
 export const savedVideoTags: Record<
   PlaylistItem["snippet"]["resourceId"]["videoId"],

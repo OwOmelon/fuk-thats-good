@@ -3,7 +3,7 @@ import { defineStore } from "pinia";
 
 import { savedVideoTags } from "./saved_video_tags";
 
-import type { PlaylistItem, PlaylistItem_Tag } from "@/types";
+import type { PlaylistItem, PlaylistItem_Tag } from "../types";
 
 type VideoId = PlaylistItem["snippet"]["resourceId"]["videoId"];
 

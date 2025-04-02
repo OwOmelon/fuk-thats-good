@@ -1,9 +1,9 @@
 import { ref } from "vue";
 import { defineStore } from "pinia";
 import { getYear } from "date-fns";
-import { years } from "@/utils/get_years";
+import { years } from "../utils/get_years";
 
-import type { Year, PlaylistItem_Tag } from "@/types";
+import type { Year, PlaylistItem_Tag } from "../types";
 
 export const useFiltersStore = defineStore("filters", () => {
 	const sortDescending = ref(true);

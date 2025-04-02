@@ -4,11 +4,11 @@ import PlaylistItem_Component from "./Item.vue";
 import { useTemplateRef, computed, onMounted } from "vue";
 import { storeToRefs } from "pinia";
 import { getTime } from "date-fns";
-import { useDataStore } from "@/stores/data";
-import { useFiltersStore } from "@/stores/filters";
-import { useVideoTagsStore } from "@/stores/video_tags";
+import { useDataStore } from "../stores/data";
+import { useFiltersStore } from "../stores/filters";
+import { useVideoTagsStore } from "../stores/video_tags";
 
-import type { PlaylistItem } from "@/types";
+import type { PlaylistItem } from "../types";
 
 const bottom = useTemplateRef<HTMLElement>("bottom");
 

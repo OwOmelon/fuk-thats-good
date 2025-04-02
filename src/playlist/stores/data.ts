@@ -2,7 +2,7 @@ import { ref } from "vue";
 import { defineStore } from "pinia";
 import qs from "query-string";
 
-import type { Year, PlaylistItems_ListResponse } from "@/types";
+import type { Year, PlaylistItems_ListResponse } from "../types";
 
 export const useDataStore = defineStore("data", () => {
   // prettier-ignore
