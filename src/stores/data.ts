@@ -1,5 +1,6 @@
 import { ref } from "vue";
 import { defineStore } from "pinia";
+import qs from "query-string";
 
 import type { Year, PlaylistItems_ListResponse } from "@/types";
 
@@ -21,25 +22,35 @@ export const useDataStore = defineStore("data", () => {
 
     playlist.fetching = true;
 
-    const nextpagetoken = playlist.data?.nextPageToken;
-    const pageTokenUrlString = `${nextpagetoken ? `&pageToken=${nextpagetoken}` : ""}`;
-
-    const url = `https://youtube.googleapis.com/youtube/v3/playlistItems?part=contentDetails%2C%20snippet&maxResults=50${pageTokenUrlString}&playlistId=${playlist.id}&key=${import.meta.env.VITE_YT_API_KEY}`;
+    const backendUrl = "http://localhost:3000/fetch-playlist";
+    const queryString = `/?${qs.stringify({
+      playlistId: playlist.id,
+      pageToken: playlist.data?.nextPageToken,
+    })}`;
 
     try {
-      const res = await fetch(url);
-      const json: PlaylistItems_ListResponse = await res.json();
+      const res = await fetch(`${backendUrl}${queryString}`);
+      const json = await res.json();
 
-      if (!playlist.data) {
-        playlists.value[year].data = json;
-      } else {
-        playlist.data.nextPageToken = json.nextPageToken;
-        playlist.data.prevPageToken = json.prevPageToken;
-        playlist.data.items = [...playlist.data.items, ...json.items];
+      if (json?.error) {
+        alert("ERROR FETCHING PLAYLIST");
+
+        console.error(json);
+
+        playlist.fetching = false;
+
+        return;
       }
+
+      playlist.data = {
+        ...json,
+        items: [...(playlist?.data?.items ?? []), ...json.items],
+      };
     } catch (err) {
       console.log(err);
       alert(err);
+
+      playlist.fetching = false;
     }
 
     playlist.fetching = false;
