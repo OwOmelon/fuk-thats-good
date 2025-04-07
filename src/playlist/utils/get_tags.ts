@@ -1,4 +1,4 @@
-import type { PlaylistItem_Tag } from "@/types";
+import type { PlaylistItem_Tag } from "../types";
 
 export const tags: PlaylistItem_Tag[] = [
 	"music",
