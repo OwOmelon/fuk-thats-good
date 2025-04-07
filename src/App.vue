@@ -14,8 +14,6 @@ import ErrorToasts from "@/errors/components/Toasts.vue";
 </template>
 
 <style lang="postcss">
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;400;600;800&display=swap");
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
