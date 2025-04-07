@@ -2,6 +2,8 @@ import { ref } from "vue";
 import { defineStore } from "pinia";
 import qs from "query-string";
 
+import { addNewError } from "@/errors/store";
+
 import type { Year, PlaylistItems_ListResponse } from "../types";
 
 export const useDataStore = defineStore("data", () => {
@@ -32,25 +34,17 @@ export const useDataStore = defineStore("data", () => {
       const res = await fetch(`${backendUrl}${queryString}`);
       const json = await res.json();
 
-      if (json?.error) {
-        alert("ERROR FETCHING PLAYLIST");
-
-        console.error(json);
-
-        playlist.fetching = false;
-
-        return;
-      }
+      if (json?.error) throw json;
 
       playlist.data = {
         ...json,
         items: [...(playlist?.data?.items ?? []), ...json.items],
       };
     } catch (err) {
-      console.log(err);
-      alert(err);
-
-      playlist.fetching = false;
+      addNewError({
+        title: "ERROR FETCHING PLAYLIST",
+        desc: JSON.stringify(err, null, 3),
+      });
     }
 
     playlist.fetching = false;
