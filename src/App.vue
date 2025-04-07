@@ -9,7 +9,7 @@ import ErrorToasts from "@/errors/components/Toasts.vue";
 	<Nav />
 	<Search />
 	<Playlist />
-	
+
 	<ErrorToasts />
 </template>
 
@@ -34,7 +34,7 @@ body {
 	@apply flex flex-col gap-y-5;
 }
 
-#app > * {
+#app > *:not(.ignore-default-boundaries) {
 	@apply mx-auto w-full max-w-screen-xl;
 }
 
