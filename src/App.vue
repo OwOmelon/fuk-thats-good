@@ -74,6 +74,8 @@ body {
 	background-repeat: repeat;
 
 	animation: loading 2s linear infinite;
+
+	@apply bg-stone-300;
 }
 
 @keyframes loading {
