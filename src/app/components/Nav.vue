@@ -10,7 +10,7 @@ import IconGithub from "~icons/mdi/github";
 			<div
 				class="grid-content-outter flex justify-between py-6 text-xl min-[375px]:text-2xl"
 			>
-				<span class="font-bold">FUCK THAT'S GOOD</span>
+				<span class="font-bold">FUK THAT'S GOOD</span>
 				<IconGithub />
 			</div>
 		</div>
