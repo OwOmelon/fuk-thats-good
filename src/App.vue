@@ -2,12 +2,15 @@
 import Nav from "@/app/components/Nav.vue";
 import Search from "@/playlist/components/Search.vue";
 import Playlist from "@/playlist/components/List.vue";
+import ErrorToasts from "@/errors/components/Toasts.vue";
 </script>
 
 <template>
 	<Nav />
 	<Search />
 	<Playlist />
+	
+	<ErrorToasts />
 </template>
 
 <style lang="postcss">
