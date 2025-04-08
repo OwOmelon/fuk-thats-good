@@ -24,14 +24,15 @@ export const useDataStore = defineStore("data", () => {
 
     playlist.fetching = true;
 
-    const backendUrl = "http://localhost:3000/fetch-playlist";
-    const queryString = `/?${qs.stringify({
+    const queryString = qs.stringify({
       playlistId: playlist.id,
       pageToken: playlist.data?.nextPageToken,
-    })}`;
+    });
 
     try {
-      const res = await fetch(`${backendUrl}${queryString}`);
+      const res = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/fetch-playlist/?${queryString}`,
+      );
       const json = await res.json();
 
       if (json?.error) throw json;
