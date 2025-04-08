@@ -34,7 +34,8 @@ body {
 	@apply flex flex-col gap-y-5;
 }
 
-#app > *:not(.ignore-default-boundaries) {
+#app > *:not(.ignore-default-boundaries),
+.default-boundaries {
 	@apply mx-auto w-full max-w-screen-xl;
 }
 
