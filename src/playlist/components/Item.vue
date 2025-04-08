@@ -2,9 +2,10 @@
 import IconPlay from "~icons/material-symbols/play-arrow-rounded";
 import TagIcon from "../components/TagIcon.vue";
 
-import { computed } from "vue";
+import { useTemplateRef, computed } from "vue";
 import { formatDistance } from "date-fns";
 import { useVideoTagsStore } from "../stores/video_tags";
+import { addNewError } from "@/errors/store";
 
 import type { PlaylistItem } from "../types";
 
@@ -15,8 +16,44 @@ const { snippet, contentDetails } = defineProps<{
 
 const { getVideoTags } = useVideoTagsStore();
 
+const videoUrlCopiedToast = {
+	ref: useTemplateRef<HTMLElement>("vuct"),
+	anim: function () {
+		if (!this.ref.value) {
+			addNewError({
+				title: "ERROR ANIMATING videoUrlCopiedToast",
+				desc: `ref "videoUrlCopiedToast" is undefined`,
+			});
+
+			return;
+		}
+
+		this.ref.value.animate(
+			{
+				opacity: [0, 1, 1, 0],
+				transform: [
+					"translateY(50%)",
+					"translateY(0)",
+					"translateY(0)",
+					"translateY(0)",
+				],
+				offset: [0, 0.2, 0.9],
+				easing: ["ease-out"],
+			},
+			{
+				duration: 1500,
+				fill: "forwards",
+			},
+		);
+	},
+};
+
 const tags = computed(() => {
 	return getVideoTags(snippet.resourceId.videoId);
+});
+
+const videoUrl = computed(() => {
+	return `https://www.youtube.com/watch?v=${snippet.resourceId.videoId}`;
 });
 
 const thumbnailUrl = computed(() => {
@@ -35,14 +72,29 @@ const thumbnailUrl = computed(() => {
 function formatDate(date: Date) {
 	return date ? `${formatDistance(new Date(), new Date(date))} ago` : "---";
 }
+
+async function writeVideoUrlToClipboard() {
+	try {
+		await navigator.clipboard.write([
+			new ClipboardItem({ "text/plain": videoUrl.value }),
+		]);
+
+		videoUrlCopiedToast.anim();
+	} catch (err) {
+		addNewError({
+			title: `ERROR COPYING VIDEO ID OF "${snippet.title}"`,
+			desc: JSON.stringify(err, null, 3),
+		});
+	}
+}
 </script>
 
 <template>
 	<div
-		class="flex overflow-hidden rounded-md border-2 border-stone-200 bg-stone-200 shadow shadow-stone-400/50"
+		class="flex rounded-md border-2 border-stone-200 bg-stone-200 shadow shadow-stone-400/50"
 	>
 		<a
-			:href="`https://www.youtube.com/watch?v=${snippet.resourceId.videoId}`"
+			:href="videoUrl"
 			target="_blank"
 			class="group rounded-[inherit] drop-shadow-[0.125rem_0_0.125rem_rgba(0,_0,_0,_0.125)]"
 		>
@@ -64,24 +116,33 @@ function formatDate(date: Date) {
 		</a>
 
 		<div class="grid grow grid-cols-[auto,_1rem] gap-2.5 p-2.5">
-			<div class="mr-5 flex grow flex-col text-stone-700">
-				<span :title="snippet.title" class="text-xs font-semibold">
+			<div class="relative mr-5 flex grow flex-col items-start text-stone-700">
+				<span
+					:title="snippet.title"
+					class="mb-auto cursor-pointer text-xs font-semibold"
+					@click="writeVideoUrlToClipboard"
+				>
 					{{ snippet.position + 1 }}. {{ snippet.title }}
 				</span>
 
-				<div class="flex grow flex-col justify-end text-xs opacity-80">
-					<a
-						:href="`https://www.youtube.com/channel/${snippet.videoOwnerChannelId}`"
-						target="_blank"
-						:title="snippet.videoOwnerChannelTitle"
-						class="line-clamp-1 w-fit"
-					>
-						{{ snippet.videoOwnerChannelTitle }}
-					</a>
+				<a
+					:href="`https://www.youtube.com/channel/${snippet.videoOwnerChannelId}`"
+					target="_blank"
+					:title="snippet.videoOwnerChannelTitle"
+					class="secondary-text line-clamp-1"
+				>
+					{{ snippet.videoOwnerChannelTitle }}
+				</a>
 
-					<span>
-						{{ formatDate(contentDetails.videoPublishedAt) }}
-					</span>
+				<span class="secondary-text">
+					{{ formatDate(contentDetails.videoPublishedAt) }}
+				</span>
+
+				<div
+					ref="vuct"
+					class="pointer-events-none absolute bottom-full left-0 mb-2 bg-stone-800 px-2 py-1 text-xs font-semibold text-stone-200 opacity-0"
+				>
+					VIDEO URL COPIED
 				</div>
 			</div>
 
@@ -97,5 +158,9 @@ function formatDate(date: Date) {
 <style scoped lang="postcss">
 span {
 	@apply line-clamp-1;
+}
+
+.secondary-text {
+	@apply text-xs opacity-80;
 }
 </style>
