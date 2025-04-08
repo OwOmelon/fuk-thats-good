@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import { type PlaylistItem_Tag } from "@/types";
+import { type PlaylistItem_Tag } from "../types";
 
 const { tag = undefined } = defineProps<{
 	tag: PlaylistItem_Tag | undefined;
