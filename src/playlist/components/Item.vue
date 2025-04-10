@@ -4,6 +4,7 @@ import TagIcon from "../components/TagIcon.vue";
 
 import { useTemplateRef, computed } from "vue";
 import { formatDistance } from "date-fns";
+
 import { useVideoTagsStore } from "../stores/video_tags";
 import { addNewError } from "@/errors/store";
 
@@ -87,6 +88,39 @@ async function writeVideoUrlToClipboard() {
 		});
 	}
 }
+
+// ==========
+
+import { ref } from "vue";
+import { checkElementOverflow } from "@/app/utils/check_element_overflow";
+import { useToolTip } from "@/app/composables/use_tooltip";
+
+const titleTooltip = {
+	ref: useTemplateRef<HTMLElement>("title"),
+	text: ref(`${snippet.title}`),
+};
+
+const channelTooltip = {
+	ref: useTemplateRef<HTMLElement>("channel"),
+	text: ref(`${snippet.videoOwnerChannelTitle}`),
+};
+
+const publishedAtTooltip = {
+	ref: useTemplateRef<HTMLElement>("publishedAt"),
+	text: ref(
+		`${new Date(contentDetails.videoPublishedAt).toLocaleDateString()}`,
+	),
+};
+
+useToolTip(titleTooltip.ref, titleTooltip.text, () =>
+	checkElementOverflow(titleTooltip.ref.value),
+);
+
+useToolTip(channelTooltip.ref, channelTooltip.text, () =>
+	checkElementOverflow(channelTooltip.ref.value),
+);
+
+useToolTip(publishedAtTooltip.ref, publishedAtTooltip.text);
 </script>
 
 <template>
@@ -118,23 +152,23 @@ async function writeVideoUrlToClipboard() {
 		<div class="grid grow grid-cols-[auto,_1rem] gap-2.5 p-2.5">
 			<div class="relative mr-5 flex grow flex-col items-start text-stone-700">
 				<span
-					:title="snippet.title"
-					class="mb-auto cursor-pointer text-xs font-semibold"
+					ref="title"
+					class="relative mb-auto cursor-pointer text-xs font-semibold"
 					@click="writeVideoUrlToClipboard"
 				>
 					{{ snippet.position + 1 }}. {{ snippet.title }}
 				</span>
 
 				<a
+					ref="channel"
 					:href="`https://www.youtube.com/channel/${snippet.videoOwnerChannelId}`"
 					target="_blank"
-					:title="snippet.videoOwnerChannelTitle"
 					class="secondary-text line-clamp-1"
 				>
 					{{ snippet.videoOwnerChannelTitle }}
 				</a>
 
-				<span class="secondary-text">
+				<span ref="publishedAt" class="secondary-text">
 					{{ formatDate(contentDetails.videoPublishedAt) }}
 				</span>
 
