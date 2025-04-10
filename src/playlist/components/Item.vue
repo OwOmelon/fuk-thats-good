@@ -113,11 +113,11 @@ const publishedAtTooltip = {
 };
 
 useToolTip(titleTooltip.ref, titleTooltip.text, () =>
-	checkElementOverflow(titleTooltip.ref.value),
+	checkElementOverflow(titleTooltip.ref.value!),
 );
 
 useToolTip(channelTooltip.ref, channelTooltip.text, () =>
-	checkElementOverflow(channelTooltip.ref.value),
+	checkElementOverflow(channelTooltip.ref.value!),
 );
 
 useToolTip(publishedAtTooltip.ref, publishedAtTooltip.text);
