@@ -29,5 +29,5 @@ coverage
 
 *.tsbuildinfo
 
-/src/app/components/_debug.vue
+/src/debug
 /.env
