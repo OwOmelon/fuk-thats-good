@@ -16,8 +16,8 @@ const fills: Record<PlaylistItem_Tag["id"], string> = {
 	1: "fill-emerald-400",
 	2: "fill-white",
 	3: "fill-red-400",
-	4: "fill-pink-400",
-	5: "fill-cyan-400",
+	4: "fill-cyan-400",
+	5: "fill-pink-400",
 	6: "fill-orange-400",
 };
 
