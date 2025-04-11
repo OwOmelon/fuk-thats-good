@@ -2,23 +2,23 @@
 import { computed } from "vue";
 import { type PlaylistItem_Tag } from "../types";
 
-const { tag = undefined } = defineProps<{
-	tag: PlaylistItem_Tag | undefined;
+const { id = undefined } = defineProps<{
+	id: PlaylistItem_Tag["id"] | undefined;
 }>();
 
-const fills: Record<PlaylistItem_Tag, string> = {
-	music: "fill-emerald-400",
-	silly: "fill-red-400",
-	clip: "fill-cyan-400",
-	art: "fill-pink-400",
-	lengthy: "fill-orange-400",
-	fav: "fill-white",
+const fills: Record<PlaylistItem_Tag["id"], string> = {
+	1: "fill-emerald-400",
+	2: "fill-white",
+	3: "fill-red-400",
+	4: "fill-pink-400",
+	5: "fill-cyan-400",
+	6: "fill-orange-400",
 };
 
 const fill = computed(() => {
 	const fallbackFill = "fill-black";
 
-	return tag ? (fills?.[tag] ?? fallbackFill) : fallbackFill;
+	return id ? (fills?.[id] ?? fallbackFill) : fallbackFill;
 });
 </script>
 

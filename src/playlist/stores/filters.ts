@@ -1,14 +1,14 @@
 import { ref } from "vue";
 import { defineStore } from "pinia";
 import { getYear } from "date-fns";
-import { years } from "../utils/get_years";
+import { years } from "../variables/years";
 
-import type { Year, PlaylistItem_Tag } from "../types";
+import type { Year, PlaylistItem_Tag, PlaylistItems_TagFilters } from "../types";
 
 export const useFiltersStore = defineStore("filters", () => {
 	const sortDescending = ref(true);
 	const activeYear = ref(`${getYear(new Date())}` as Year);
-	const activeTagFilters = ref(new Map<PlaylistItem_Tag, 1>());
+	const activeTagFilters = ref<PlaylistItems_TagFilters>([]);
 
 	function setActiveYear(dir: 1 | -1) {
 		const currentIndex = years.indexOf(activeYear.value);
@@ -22,11 +22,13 @@ export const useFiltersStore = defineStore("filters", () => {
 		activeYear.value = years[(currentIndex + dir) % years.length];
 	}
 
-	function addTagFilter(tag: PlaylistItem_Tag) {
-		if (activeTagFilters.value.has(tag)) {
-			activeTagFilters.value.delete(tag);
+	function addTagFilter(id: PlaylistItem_Tag["id"]) {
+		const index = activeTagFilters.value.indexOf(id);
+
+		if (index !== -1) {
+			activeTagFilters.value.splice(index, 1);
 		} else {
-			activeTagFilters.value.set(tag, 1);
+			activeTagFilters.value.push(id);
 		}
 	}
 

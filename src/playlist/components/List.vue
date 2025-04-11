@@ -7,9 +7,11 @@ import { useDataStore } from "../stores/data";
 import { useFiltersStore } from "../stores/filters";
 import { useVideoTagsStore } from "../stores/video_tags";
 
-import type { PlaylistItems_ListResponse } from "../types";
+import { filterPlaystListItemsBySearchResults } from "../utils/filter_playlistitems_by_searchresults";
+import { filterPlaylistItemsByTags } from "../utils/filter_playlistitems_by_tags";
+import { sortPlaylistItems } from "../utils/sort_playlistitems";
 
-const bottom = useTemplateRef<HTMLElement>("bottom");
+// ==========
 
 const { playlists } = storeToRefs(useDataStore());
 const { fetchPlaylist } = useDataStore();
@@ -17,7 +19,7 @@ const { fetchPlaylist } = useDataStore();
 const { sortDescending, activeYear, activeTagFilters, searchInput } =
 	storeToRefs(useFiltersStore());
 
-const { getVideoTags, setActiveVideo } = useVideoTagsStore();
+const { setActiveVideo } = useVideoTagsStore();
 
 // ==========
 
@@ -30,9 +32,9 @@ const currentPlaylistItems = computed(() => {
 		JSON.stringify(currentPlaylist.value.data?.items ?? []),
 	);
 
-	items = filterPlaystListItemsBySearchResults(items);
-	items = filterPlaylistItemsByTags(items);
-	items = sortPlaylistItems(items);
+	items = filterPlaystListItemsBySearchResults(items, searchInput.value);
+	items = filterPlaylistItemsByTags(items, activeTagFilters.value);
+	items = sortPlaylistItems(items, sortDescending.value);
 
 	return items;
 });
@@ -46,58 +48,9 @@ const wholePlaylistFetched = computed(() => {
 	);
 });
 
-function filterPlaystListItemsBySearchResults(
-	items: PlaylistItems_ListResponse["items"],
-) {
-	if (!searchInput.value) return items;
-
-	const splitString_ToLowerCase = (str: string) => {
-		return [...str.split(" "), ...str.split(".")].map((word) =>
-			word.toLowerCase(),
-		);
-	};
-
-	return items.filter((item) => {
-		let { title, videoOwnerChannelTitle: channel, description } = item.snippet;
-
-		if (!item.contentDetails.videoPublishedAt) return false;
-
-		for (const searchWord of splitString_ToLowerCase(searchInput.value)) {
-			const lowercaseSearchWord = searchWord.toLowerCase();
-
-			switch (true) {
-				case title.toLowerCase().includes(lowercaseSearchWord):
-				case channel.toLowerCase().includes(lowercaseSearchWord):
-				case description.toLowerCase().includes(lowercaseSearchWord):
-					return true;
-			}
-		}
-
-		return false;
-	});
-}
-
-function filterPlaylistItemsByTags(items: PlaylistItems_ListResponse["items"]) {
-	if (!activeTagFilters.value.size) return items;
-
-	return items.filter(({ snippet }) => {
-		for (const tag of getVideoTags(snippet.resourceId.videoId)) {
-			if (activeTagFilters.value.has(tag)) return true;
-		}
-
-		return false;
-	});
-}
-
-function sortPlaylistItems(items: PlaylistItems_ListResponse["items"]) {
-	return items.toSorted((a, b) => {
-		return sortDescending.value
-			? a.snippet.position - b.snippet.position
-			: b.snippet.position - a.snippet.position;
-	});
-}
-
 // ==========
+
+const bottom = useTemplateRef("bottom");
 
 onMounted(() => {
 	if (!bottom.value) {

@@ -1,12 +1,14 @@
 export type Year = "2025" | "2024" | "2023" | "2022" | "2021";
-export type PlaylistItem_Tag =
-  | "music"
-  | "silly"
-  | "clip"
-  | "art"
-  | "lengthy"
-  | "fav";
-
+export type PlaylistItem_Tags = [
+  { id: 1; name: "music" },
+  { id: 2; name: "fav" },
+  { id: 3; name: "silly" },
+  { id: 4; name: "art" },
+  { id: 5; name: "short" },
+  { id: 6; name: "lengthy" },
+];
+export type PlaylistItem_Tag = PlaylistItem_Tags[number];
+export type PlaylistItems_TagFilters = PlaylistItem_Tag["id"][]
 export type PlaylistItem = {
   kind: "youtube#playlistItem";
   etag: string;
@@ -35,7 +37,6 @@ export type PlaylistItem = {
     videoPublishedAt: Date;
   };
 };
-
 export type PlaylistItems_ListResponse = {
   kind: "youtube#playlistItemListResponse";
   etag: string;

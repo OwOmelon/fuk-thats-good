@@ -3,7 +3,7 @@ import IconSearch from "~icons/mdi/magnify";
 import IconChevronLeft from "~icons/mdi/chevron-left";
 import IconChevronRight from "~icons/mdi/chevron-right";
 
-import { tags } from "../utils/get_tags";
+import { playlistItem_Tags } from "../variables/playlist_item_tags";
 
 import TagIcon from "../components/TagIcon.vue";
 
@@ -85,17 +85,17 @@ function onInput() {
 					<span>Tags: </span>
 
 					<button
-						v-for="tag in tags"
+						v-for="{ name, id } in playlistItem_Tags"
 						:class="[
 							{
-								'!border-stone-300 bg-white': activeTagFilters.has(tag),
+								'!border-stone-300 bg-white': activeTagFilters.includes(id),
 							},
 							'flex items-center gap-1 rounded border-[0.0625rem] border-transparent px-2 py-1',
 						]"
-						@click="addTagFilter(tag)"
+						@click="addTagFilter(id)"
 					>
-						<TagIcon class="h-5" :tag="tag" />
-						<span>{{ tag }}</span>
+						<TagIcon class="h-5" :id="id" />
+						<span>{{ name }}</span>
 					</button>
 				</div>
 			</div>

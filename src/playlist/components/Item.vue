@@ -5,8 +5,8 @@ import TagIcon from "../components/TagIcon.vue";
 import { useTemplateRef, computed } from "vue";
 import { formatDistance } from "date-fns";
 
-import { useVideoTagsStore } from "../stores/video_tags";
 import { addNewError } from "@/errors/store";
+import { getVideoTags } from "../utils/get_video_tags";
 
 import type { PlaylistItem } from "../types";
 
@@ -14,8 +14,6 @@ const { snippet, contentDetails } = defineProps<{
 	snippet: PlaylistItem["snippet"];
 	contentDetails: PlaylistItem["contentDetails"];
 }>();
-
-const { getVideoTags } = useVideoTagsStore();
 
 const videoUrlCopiedToast = {
 	ref: useTemplateRef<HTMLElement>("vuct"),
@@ -49,7 +47,7 @@ const videoUrlCopiedToast = {
 	},
 };
 
-const tags = computed(() => {
+const tagIds = computed(() => {
 	return getVideoTags(snippet.resourceId.videoId);
 });
 
@@ -181,8 +179,8 @@ useToolTip(publishedAtTooltip.ref, publishedAtTooltip.text);
 			</div>
 
 			<div class="grid grid-rows-4">
-				<div v-for="tag in tags" class="relative grid place-items-center">
-					<TagIcon :tag="tag" class="absolute h-4 w-4 rotate-90" />
+				<div v-for="id in tagIds" class="relative grid place-items-center">
+					<TagIcon :id="id" class="absolute h-4 w-4 rotate-90" />
 				</div>
 			</div>
 		</div>
