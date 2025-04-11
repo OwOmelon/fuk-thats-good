@@ -1,10 +1,16 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { useTemplateRef, computed } from "vue";
+import { useToolTip } from "@/app/composables/use_tooltip";
+import { playlistItem_Tags } from "../variables/playlist_item_tags";
+
 import { type PlaylistItem_Tag } from "../types";
 
-const { id = undefined } = defineProps<{
+const { id = undefined, addTooltip = undefined } = defineProps<{
 	id: PlaylistItem_Tag["id"] | undefined;
+	addTooltip?: boolean | undefined;
 }>();
+
+const iconRef = useTemplateRef<HTMLElement>("tag-icon");
 
 const fills: Record<PlaylistItem_Tag["id"], string> = {
 	1: "fill-emerald-400",
@@ -15,15 +21,25 @@ const fills: Record<PlaylistItem_Tag["id"], string> = {
 	6: "fill-orange-400",
 };
 
+const name = computed(() => {
+	return (
+		playlistItem_Tags?.[playlistItem_Tags.findIndex((tag) => tag.id === id)]
+			?.name ?? "---"
+	);
+});
+
 const fill = computed(() => {
 	const fallbackFill = "fill-black";
 
 	return id ? (fills?.[id] ?? fallbackFill) : fallbackFill;
 });
+
+if (addTooltip) useToolTip(iconRef, name);
 </script>
 
 <template>
 	<svg
+		ref="tag-icon"
 		width="20"
 		height="24"
 		viewBox="0 0 20 24"
